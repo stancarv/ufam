@@ -1,6 +1,14 @@
 
 # Planejador de Blocos com Comprimentos Diferentes (Capítulo 17 - Bratko)
 
+####Integrantes:
+
+Jhonatas Costa Oliveira
+
+Stanley de Carvalho Monteiro
+
+Ícaro Costa Moreira
+
 ## 📚 Descrição Geral
 
 Este projeto implementa um planejador para o **mundo dos blocos com comprimentos diferentes**, conforme descrito na página 403 do capítulo 17 do livro *Prolog Programming for Artificial Intelligence* de Ivan Bratko.
