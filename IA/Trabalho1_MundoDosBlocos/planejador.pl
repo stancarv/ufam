@@ -6,6 +6,14 @@
 % para organizar blocos de tamanhos diferentes sobre uma mesa.
 % -------------------------------------------------------------
 
+% Integrantes:
+
+% Jhonatas Costa Oliveira
+
+% Stanley de Carvalho Monteiro
+
+% Ícaro Costa Moreira
+
 % -------------------------------------------------------------
 % Predicado principal: executa o plano completo
 % -------------------------------------------------------------
