@@ -1,7 +1,7 @@
 
 # Planejador de Blocos com Comprimentos Diferentes (Capítulo 17 - Bratko)
 
-####Integrantes:
+#### Integrantes:
 
 Jhonatas Costa Oliveira
 
