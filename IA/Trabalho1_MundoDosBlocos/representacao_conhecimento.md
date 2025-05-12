@@ -65,7 +65,7 @@ Este conjunto de fatos define que:
 
 - **Sem o uso de `assign` e `retract`:** A representação dos estados e das relações entre blocos é feita diretamente com predicados lógicos em Prolog. O uso de `assign` e `retract` não é necessário, pois o estado é simplesmente representado por relações lógicas fixas.
 
-### Exemplo de uso. s_inicial=i1 ate o estado s_final=i2
+#### Exemplo de Saída. s_inicial=i1 ate o estado s_final=i2 do T1_MundoDosBlocos.pdf
 
 ![image](https://github.com/user-attachments/assets/5bb8b3f9-a223-40a4-b356-595c6d0e9f64)
 
