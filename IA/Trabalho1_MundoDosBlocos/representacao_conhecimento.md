@@ -1,6 +1,14 @@
 
 # PARTE REPRESENTAÇÃO DO CONHECIMENTO
 
+#### Integrantes:
+
+Jhonatas Costa Oliveira
+
+Stanley de Carvalho Monteiro
+
+Ícaro Costa Moreira
+
 ### 1) Descrição do Problema em Linguagem Natural
 
 O problema trata de um mundo com blocos de diferentes tamanhos, mas de mesma altura. Esses blocos podem ser empilhados uns sobre os outros, desde que respeitem a condição de estabilidade. Ou seja, um bloco só pode ser colocado sobre outro se este último não tiver nenhum outro bloco em cima dele, garantindo a estabilidade.
