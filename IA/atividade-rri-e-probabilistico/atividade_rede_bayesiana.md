@@ -2,7 +2,7 @@
 
 Código adaptando o alarm_sensor.pl e bayes_net_interpreter.pl postado no classroom para um código calls_alarm.pl baseado na figura 13.2 do material *StuartRussell_PeterNorvig_2020_AIMA_Chap13.pdf*.
 
-A causalidade **burglary** e **lightning** dispara **sensor** foi modificada para causalidade **burglary** e **earthquake** dispara **alarm**.
+A causalidade **burglary** e **lightning** dispara **sensor** foi modificada para a causalidade **burglary** e **earthquake** dispara **alarm**.
 
 ---
 
