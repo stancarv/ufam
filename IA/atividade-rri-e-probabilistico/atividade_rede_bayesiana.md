@@ -62,7 +62,7 @@ p(marycalls, [not(alarm)], 0.01).
 - Nomes das variáveis e fatos atualizados para refletir a nova topologia e CPTs.
 
 ---
-###Integrantes:###
+###Integrantes:
 
 STANLEY DE CARVALHO MONTEIRO
 JHONATAS COSTA OLIVEIRA
