@@ -6,7 +6,7 @@ A causalidade **burglary** e **lightning** dispara **sensor** foi modificada par
 
 ---
 
-### Antes (exemplo simplificado do `parent` e `p/2` e `p/3`):
+### Antes (exemplo simplificado do `parent` e `p/2` e `p/3` de alarm_sensor.pl):
 
 ```prolog
 parent(burglary, sensor).
