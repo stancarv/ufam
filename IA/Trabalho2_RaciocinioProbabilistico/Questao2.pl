@@ -1,6 +1,5 @@
 % Aluno: Stanley de Carvalho Monteiro - 21950882
 
-
 % Definindo as probabilidades a priori
 0.7::str(dry).
 0.2::str(wet).
