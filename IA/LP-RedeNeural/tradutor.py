@@ -132,16 +132,20 @@ class CILPNetwork:
         return output_activations
     
     def generate_truth_table(self):
-        n = len(self.input_neurons)
+        input_neurons = [v for v in self.input_neurons if v != 'T']
+        n = len(input_neurons)
+
         truth_table = []
         
         for i in range(2**n):
             bits = format(i, f'0{n}b')
-            input_values = {
-                self.input_neurons[j]: (1 if self.input_neurons[j] == 'T' else (1 if bit == '1' else -1))
-                for j, bit in enumerate(bits)}
-
             
+            input_values = {
+                var: 1 if bit == '1' else -1
+                for var, bit in zip(input_neurons, bits)
+            }
+            input_values['T'] = 1  # fixa T como true
+
             outputs = self.evaluate(input_values)
             rounded_outputs = {k: 1 if v >= self.A_min else (-1 if v <= -self.A_min else 0)
                              for k, v in outputs.items()}
