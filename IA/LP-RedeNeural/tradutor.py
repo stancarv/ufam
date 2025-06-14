@@ -180,3 +180,6 @@ if __name__ == "__main__":
         print(f"Arquivo não encontrado: {caminho}")
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
+        
+# Para utilizar: python tradutor.py
+# Se der erro, colocar versao ao lado de python(Ex: python3 tradutor.py)
