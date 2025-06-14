@@ -137,8 +137,10 @@ class CILPNetwork:
         
         for i in range(2**n):
             bits = format(i, f'0{n}b')
-            input_values = {self.input_neurons[j]: 1 if bit == '1' else -1 
-                          for j, bit in enumerate(bits)}
+            input_values = {
+                self.input_neurons[j]: (1 if self.input_neurons[j] == 'T' else (1 if bit == '1' else -1))
+                for j, bit in enumerate(bits)}
+
             
             outputs = self.evaluate(input_values)
             rounded_outputs = {k: 1 if v >= self.A_min else (-1 if v <= -self.A_min else 0)
