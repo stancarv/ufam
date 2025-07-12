@@ -1,6 +1,7 @@
+
 # SOLUÇÃO DA QUESTÃO 1 DO TRABALHO FINAL
 
-# --- Questão 1: Classificador de Sudoku 4x4 ou 9x9 (Google Colab) ---
+## Questão 1: Classificador de Sudoku 4x4 ou 9x9 (Google Colab)
 
 ```python
 import numpy as np
@@ -48,10 +49,11 @@ def classificar_tabuleiro(tabuleiro):
                 return 0
 
     return 1  # válido
+```
 
+### Casos de Teste
 
-# ---------- Casos de Teste ----------
-
+```python
 # Exemplo válido 4x4
 tabuleiro_4x4_valido = np.array([
     [1, 2, 3, 4],
@@ -86,10 +88,170 @@ print("Sudoku 4x4 inválido:", classificar_tabuleiro(tabuleiro_4x4_invalido))  #
 print("Sudoku 9x9 válido:", classificar_tabuleiro(tabuleiro_9x9_valido))      # 1
 ```
 
-... (conteúdo completo omitido aqui por brevidade)
-
+# SOLUÇÃO DA QUESTÃO 2
 
 ```python
+import numpy as np
+import pandas as pd
+from copy import deepcopy
+from itertools import product
+
+def carregar_sudoku_csv(caminho):
+    df = pd.read_csv(caminho, header=None)
+    return df.to_numpy()
+
+def validar_tabuleiro(tabuleiro):
+    n = tabuleiro.shape[0]
+    bloco = int(n ** 0.5)
+
+    # Verificar linhas
+    for i in range(n):
+        linha = tabuleiro[i, :]
+        numeros = linha[linha != 0]
+        if len(numeros) != len(set(numeros)):
+            return False, f"Valores repetidos na linha {i+1}"
+
+    # Verificar colunas
+    for j in range(n):
+        coluna = tabuleiro[:, j]
+        numeros = coluna[coluna != 0]
+        if len(numeros) != len(set(numeros)):
+            return False, f"Valores repetidos na coluna {j+1}"
+
+    # Verificar blocos
+    for bi in range(bloco):
+        for bj in range(bloco):
+            ini_i, ini_j = bi * bloco, bj * bloco
+            bloco_atual = tabuleiro[ini_i:ini_i+bloco, ini_j:ini_j+bloco]
+            numeros = bloco_atual[bloco_atual != 0]
+            if len(numeros) != len(set(numeros)):
+                return False, f"Valores repetidos no bloco ({bi+1},{bj+1})"
+
+    return True, "Tabuleiro válido"
+
+def pode_colocar(tabuleiro, linha, col, valor):
+    n = tabuleiro.shape[0]
+    bloco = int(n ** 0.5)
+
+    if valor in tabuleiro[linha]: return False
+    if valor in tabuleiro[:, col]: return False
+
+    ini_linha = (linha // bloco) * bloco
+    ini_col = (col // bloco) * bloco
+    subgrade = tabuleiro[ini_linha:ini_linha+bloco, ini_col:ini_col+bloco]
+
+    if valor in subgrade: return False
+
+    return True
+
+def verificar_sem_solucao(tabuleiro):
+    n = tabuleiro.shape[0]
+    impossiveis = []
+
+    for numero in range(1, n + 1):
+        total_no_tabuleiro = np.count_nonzero(tabuleiro == numero)
+
+        if total_no_tabuleiro > n:
+            impossiveis.append((numero, f"já aparece {total_no_tabuleiro} vezes (máximo é {n})"))
+            continue
+
+        if total_no_tabuleiro == n:
+            continue
+
+        pode_inserir = False
+        posicoes_invalidas = []
+        for i, j in product(range(n), repeat=2):
+            if tabuleiro[i][j] == 0:
+                if pode_colocar(tabuleiro, i, j, numero):
+                    pode_inserir = True
+                else:
+                    posicoes_invalidas.append((i, j))
+
+        if not pode_inserir:
+            impossiveis.append((numero, posicoes_invalidas))
+
+    if impossiveis:
+        return True, impossiveis
+    else:
+        return False, None
+
+def numeros_faltando(tabuleiro):
+    n = tabuleiro.shape[0]
+    return [num for num in range(1, n+1) if np.count_nonzero(tabuleiro == num) < n]
+
+def aplicar_movimentos(tabuleiro):
+    n = tabuleiro.shape[0]
+    analise = {}
+    numeros_faltantes = numeros_faltando(tabuleiro)
+
+    for numero in numeros_faltantes:
+        movimentos_validos = []
+        leva_a_sem_solucao = False
+
+        for i, j in product(range(n), repeat=2):
+            if tabuleiro[i][j] == 0 and pode_colocar(tabuleiro, i, j, numero):
+                novo_tabuleiro = deepcopy(tabuleiro)
+                novo_tabuleiro[i][j] = numero
+
+                bloqueado, _ = verificar_sem_solucao(novo_tabuleiro)
+                if bloqueado:
+                    leva_a_sem_solucao = True
+
+                movimentos_validos.append((i, j))
+
+        analise[numero] = {
+            "movimentos_validos": movimentos_validos,
+            "leva_a_sem_solucao": leva_a_sem_solucao
+        }
+
+    return analise
+
+def classificar_tabuleiro_aberto(tabuleiro):
+    n = tabuleiro.shape[0]
+    print(f"Tamanho do tabuleiro: {n}x{n}")
+
+    # Validação inicial rigorosa
+    valido, mensagem = validar_tabuleiro(tabuleiro)
+    if not valido:
+        print(f"\nSITUAÇÃO: TABULEIRO INVÁLIDO - {mensagem}")
+        print("\nCLASSIFICAÇÃO: 1 (Tabuleiro sem solução possível)")
+        return 1
+
+    nums_faltantes = numeros_faltando(tabuleiro)
+    print("\nNúmeros que ainda podem ser colocados:", nums_faltantes)
+
+    sem_solucao, info = verificar_sem_solucao(tabuleiro)
+
+    if sem_solucao:
+        print("\nSITUAÇÃO: SEM SOLUÇÃO")
+        for item in info:
+            numero, detalhes = item
+            if isinstance(detalhes, str):
+                print(f"\nNúmero {numero}: {detalhes}")
+            else:
+                print(f"\nNúmero {numero}:")
+                print("  Não pode ser colocado em nenhuma posição válida")
+                print(f"  Posições testadas: {detalhes}")
+        print("\nCLASSIFICAÇÃO: 1 (Tabuleiro sem solução possível)")
+        return 1
+    else:
+        print("\nSITUAÇÃO: SOLUÇÃO POSSÍVEL")
+        analise = aplicar_movimentos(tabuleiro)
+
+        for num in nums_faltantes:
+            info = analise[num]
+            print(f"\nNúmero {num}:")
+
+            if not info["movimentos_validos"]:
+                print("  Nenhuma posição válida encontrada")
+            else:
+                print(f"  Posições válidas: {info['movimentos_validos']}")
+                if info["leva_a_sem_solucao"]:
+                    print("  Atenção: Algumas destas posições podem levar a um estado sem solução")
+
+        print("\nCLASSIFICAÇÃO: 2 (Tabuleiro com solução possível)")
+        return 2
+
 # PARA TESTAR:
 
 from google.colab import files
@@ -101,18 +263,26 @@ tabuleiro = carregar_sudoku_csv(nome_arquivo)
 
 # Ver resultado
 classificar_tabuleiro_aberto(tabuleiro)
+```
 
-# EXEMPLO SUDOKU 4X4 VALIDO
-#    1,2,3,4
-#    3,4,1,2
-#    2,1,4,3
-#    4,3,2,0
+### Exemplos de Entrada
 
-# EXEMPLO SUDOKU 4X4 INVALIDO
-#    1, 0, 3, 4
-#    3, 4, 0, 1
-#    0, 1, 4, 3
-#    4, 0, 0, 1
+**Sudoku 4x4 Válido:**
+
+```
+1,2,3,4
+3,4,1,2
+2,1,4,3
+4,3,2,0
+```
+
+**Sudoku 4x4 Inválido:**
+
+```
+1,0,3,4
+3,4,0,1
+0,1,4,3
+4,0,0,1
 ```
 
 # SOLUÇÃO PARA A QUESTÃO 3
@@ -257,8 +427,7 @@ class SudokuSolver:
                 if len(rows) == 1:
                     heuristicas["Hidden Single"] = True
 
-        print("
-Heurísticas recomendadas:")
+        print("\nHeurísticas recomendadas:")
         for h, ativa in heuristicas.items():
             if ativa:
                 print(f"- {h}")
